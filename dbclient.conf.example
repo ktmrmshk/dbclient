@@ -1,0 +1,7 @@
+[default]
+auth = bearer
+token = xxxxxxxxxxxxxxxxxxxxxxx 
+api_base_url = https://xxxxxxxxxxxxxx.cloud.databricks.com/
+
+
+
