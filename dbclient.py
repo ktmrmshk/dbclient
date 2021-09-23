@@ -148,10 +148,5 @@ def cmd(profile, config, jobs_json):
   app.getConfig(config, profile)
   app.run_jobs(jobs)
 
-
-#job_id=1373926
-#  body['job_id'] = job_id
-#  r=dbc.db_request('/api/2.0/jobs/run-now', 'POST', body=body)
-
 if __name__ == '__main__':
   cmd()
