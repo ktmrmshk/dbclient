@@ -7,14 +7,29 @@ import configparser
 import click
 
 class dbclient(object):
-  def __init__(self, workspace_url, token):
+  def __init__(self, workspace_url, token=None, auth_type='bearer', user=None, password=None):
     self.workspace_url = workspace_url
+    self.auth_type = auth_type
     self.token = token
+    self.user = user
+    self.password = password
   
   def db_request(self, endpoint, method, body=None):
     url = urljoin(self.workspace_url, endpoint)
-    headers={'Authorization': f'Bearer {self.token}'}
-    r=requests.request(method, url, headers=headers, json=body)
+
+    headers=None
+    auth=None
+    if self.auth_type == 'bearer':
+      headers={'Authorization': f'Bearer {self.token}'}
+    elif self.auth_type == 'basic':
+      auth = (self.user, self.password)
+    else:
+      raise Exception('config param error')
+      
+    r=requests.request(method, url, headers=headers, auth=auth, json=body)
+    
+    print('>>>>>', r.request.headers)
+
     if r.status_code != 200:
       raise Exception(f'status_code => {r.status_code}')
     return r
@@ -101,10 +116,15 @@ class dbapp(object):
     if self.auth.lower() == 'bearer':
       self.token = config[profile_name]['token']
       self.api_base_url = config[profile_name]['api_base_url']
+      self.dbc = dbclient(self.api_base_url, self.token)
+    elif self.auth.lower() == 'basic':
+      self.user = config[profile_name]['user']
+      self.password = config[profile_name]['password']
+      self.api_base_url = config[profile_name]['api_base_url']
+      self.dbc = dbclient(self.api_base_url, auth_type='basic', user=self.user, password=self.password)
     else:
       raise Exception('config param error')
 
-    self.dbc = dbclient(self.api_base_url, self.token)
   
   def call_api(self, call_api_dict):
     '''
