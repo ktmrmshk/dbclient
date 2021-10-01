@@ -3,5 +3,11 @@ auth = bearer
 token = xxxxxxxxxxxxxxxxxxxxxxx 
 api_base_url = https://xxxxxxxxxxxxxx.cloud.databricks.com/
 
+; Basic Auth is not recommended! Use Bearer auth with token
+[basic_auth_example]
+auth = basic
+user = admin@example.com
+password = xxxxxxyyyyyzzzzz
+api_base_url = https://xxxxxxxxxxxxxx.cloud.databricks.com/
 
 
